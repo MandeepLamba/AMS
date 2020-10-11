@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AMS</string>
+    <string name="log_in">Log In</string>
+    <string name="user_icon">User Icon</string>
+    <string name="name">Name</string>
+    <string name="pin">Pin</string>
+    <string name="sign_up">Sign Up</string>
 </resources>

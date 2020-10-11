@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
-        android:hint="Name"
+        android:hint="@string/name"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,7 @@
         android:layout_marginTop="24dp"
         android:ems="10"
         android:gravity="center"
-        android:hint="Pin"
+        android:hint="@string/pin"
         android:inputType="numberPassword"
         android:maxLength="4"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         style="@style/AllButtons"
-        android:text="Sign Up"
+        android:text="@string/sign_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newPineditText" />
 </androidx.constraintlayout.widget.ConstraintLayout>
