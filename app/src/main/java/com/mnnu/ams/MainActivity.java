@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
                             cursor.moveToFirst();
                             Intent intent = new Intent(MainActivity.this, Dashboard.class);
                             intent.putExtra("name",cursor.getString(0));
-                            intent.putExtra("pin",cursor.getString(1));
                             startActivity(intent);
                             finish();
                         }
