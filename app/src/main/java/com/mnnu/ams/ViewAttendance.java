@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.mnnu.ams.Adapters.AttendanceListAdapter;
 import com.mnnu.ams.Adapters.SubjectListAdapter;
 import com.mnnu.ams.Module.Attendance;
 import com.mnnu.ams.Module.Subject;
@@ -28,10 +29,10 @@ public class ViewAttendance extends AppCompatActivity {
     private ArrayList<Subject> subjects;
     private ArrayList<Attendance> attendances;
     private SQLiteDatabase database;
-    private Spinner classesSpinner,subjectSpinner;
+    private Spinner classesSpinner, subjectSpinner;
     private ListView listView;
-    private HashMap<String,ArrayList<String>> classSub;
-    private String selectedClass="";
+    private HashMap<String, ArrayList<String>> classSub;
+    private String selectedClass = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +55,23 @@ public class ViewAttendance extends AppCompatActivity {
         classSub = new HashMap<>();
         for (Subject s :
                 subjects) {
-            if(!(classSub.containsKey(s.getClassname()))){
-                classSub.put(s.getClassname(),new ArrayList<String>());
+            if (!(classSub.containsKey(s.getClassname()))) {
+                classSub.put(s.getClassname(), new ArrayList<String>());
             }
             classSub.get(s.getClassname()).add(s.getName());
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,classes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, classes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         classesSpinner.setAdapter(adapter);
         classesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedClass = adapterView.getSelectedItem().toString();
-                ArrayAdapter<String> adapter1 = new ArrayAdapter<>(ViewAttendance.this, android.R.layout.simple_spinner_item,classSub.get(adapterView.getSelectedItem().toString()));
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<>(ViewAttendance.this, android.R.layout.simple_spinner_item, classSub.get(adapterView.getSelectedItem().toString()));
                 adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 subjectSpinner.setAdapter(adapter1);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -79,8 +81,8 @@ public class ViewAttendance extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedSub = adapterView.getSelectedItem().toString();
-                if((!selectedClass.equals("")) && (!selectedSub.equals(""))){
-                    UpdateAttendancelist(selectedClass,selectedSub);
+                if ((!selectedClass.equals("")) && (!selectedSub.equals(""))) {
+                    UpdateAttendancelist(selectedClass, selectedSub);
                 }
             }
 
@@ -93,11 +95,11 @@ public class ViewAttendance extends AppCompatActivity {
 
     private void UpdateAttendancelist(String c, String s) {
         attendances = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM attendance where classname = ? and subjectname = ?",new String[]{c,s});
-        while (cursor.moveToNext()){
-            attendances.add(new Attendance(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)));
+        Cursor cursor = database.rawQuery("SELECT * FROM attendance where classname = ? and subjectname = ?", new String[]{c, s});
+        while (cursor.moveToNext()) {
+            attendances.add(new Attendance(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
         }
-        if(attendances.size()<1){
+        if (attendances.size() < 1) {
             Toast.makeText(this, "No Attendance found!", Toast.LENGTH_SHORT).show();
         }
         cursor.close();
@@ -105,28 +107,36 @@ public class ViewAttendance extends AppCompatActivity {
     }
 
     private void showAttendanceInList() {
-        HashMap<String,int[]> attended = new HashMap<>();
-        for (Attendance a : attendances){
-            if(!attended.containsKey(a.getName())){
-                attended.put(a.getName(), new int[]{0, 0});
+        HashMap<String, ArrayList<Integer>> attended = new HashMap<>();
+        HashMap<String, Float> fAttend = new HashMap<>();
+        for (Attendance a : attendances) {
+            if (!attended.containsKey(a.getName())) {
+                attended.put(a.getName(), new ArrayList<Integer>());
             }
-            if(a.getIsPrasent().equals(true)){
-                attended.get(a.getName())[0]++;
-            }
-            attended.get(a.getName())[1]++;
+            attended.get(a.getName()).add(Integer.parseInt(a.getIsPrasent()));
         }
-        Log.d(TAG, "showAttendanceInList: keys:"+attended.keySet().toString());
-//        Log.d(TAG, "showAttendanceInList: values:"+attended.values().);
-
+        for (String key: attended.keySet()) {
+            Log.d(TAG, "showAttendanceInList key: " + key + "values: "+attended.get(key).toString());
+            int count=0;
+            for (int i :
+                    attended.get(key)) {
+                if(i==1){
+                    count++;
+                }
+            }
+            fAttend.put(key,((float) count/attended.get(key).size())*100);
+        }
+        AttendanceListAdapter adapter = new AttendanceListAdapter(this, fAttend);
+        listView.setAdapter(adapter);
     }
 
     private void UpdateSubjectList() {
         subjects = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM subject",null);
-        while (cursor.moveToNext()){
-            subjects.add(new Subject(cursor.getString(0),cursor.getString(1)));
+        Cursor cursor = database.rawQuery("SELECT * FROM subject", null);
+        while (cursor.moveToNext()) {
+            subjects.add(new Subject(cursor.getString(0), cursor.getString(1)));
         }
-        if(subjects.size()<1){
+        if (subjects.size() < 1) {
             Toast.makeText(this, "List is Empty, Add Subject", Toast.LENGTH_SHORT).show();
         }
         cursor.close();
@@ -134,8 +144,8 @@ public class ViewAttendance extends AppCompatActivity {
 
     private void UpdateClassesList() {
         classes = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM class",null);
-        while (cursor.moveToNext()){
+        Cursor cursor = database.rawQuery("SELECT * FROM class", null);
+        while (cursor.moveToNext()) {
             classes.add(cursor.getString(0));
         }
         cursor.close();

@@ -1,6 +1,7 @@
 package com.mnnu.ams.Adapters;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,26 +11,36 @@ import com.mnnu.ams.Module.Attendance;
 import com.mnnu.ams.Module.Student;
 import com.mnnu.ams.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class AttendanceListAdapter extends BaseAdapter {
 
-    private Activity activity;
-    private List<Attendance> attendances;
+    private static final String TAG = "mandeep";
 
-//    public AttendanceListAdapter(Activity activity, ) {
-//        this.activity = activity;
-//        this.attendances = attendances;
-//    }
+    private Activity activity;
+    private HashMap<String,Float> fAttend;
+    private ArrayList<String> keys;
+
+    public AttendanceListAdapter(Activity activity, HashMap<String,Float> fAttend) {
+        this.activity = activity;
+        this.fAttend = fAttend;
+        keys = new ArrayList<>();
+        keys.addAll(fAttend.keySet());
+        Log.d(TAG, "AttendanceListAdapter: started");
+        
+    }
 
     @Override
     public int getCount() {
-        return attendances.size();
+        return fAttend.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return attendances.get(i);
+        return keys.get(i);
     }
 
     @Override
@@ -40,16 +51,29 @@ public class AttendanceListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if(view == null){
-            view = activity.getLayoutInflater().inflate(R.layout.student_list_item,null);
+            view = activity.getLayoutInflater().inflate(R.layout.attendance_list_item,null);
         }
-        TextView sName = (TextView)view.findViewById(R.id.attendanceList_name);
-        TextView sAttendance = (TextView)view.findViewById(R.id.attendanceList_attendance);
+        Float aFloat = fAttend.get(getItem(i));
+        if(aFloat>=90){
+            view.setBackgroundResource(R.color.great);
+        }
+        else if(aFloat>=75){
+            view.setBackgroundResource(R.color.safe);
+        }
+        else{
+            view.setBackgroundResource(R.color.danger);
+        }
 
-        Attendance attendance = attendances.get(i);
-//
-//        sName.setText(attendance);
-//        sAttendance.setText(s.getsRoll());
+        TextView sName = view.findViewById(R.id.attendanceList_name);
+        TextView sAttendance = view.findViewById(R.id.attendanceList_attendance);
+
+        Log.d(TAG, "getView: key:"+getItem(i).toString() + "value: "+aFloat.toString());
+        sName.setText(getItem(i).toString());
+        Double r = Math.round(aFloat*100)/100.0;
+        sAttendance.setText(r.toString());
 
         return view;
     }
+
+
 }
