@@ -45,28 +45,29 @@ public class MainActivity extends AppCompatActivity {
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (spinner.getSelectedItem().toString().isEmpty() || loginPin.getText().toString().length() < 4) {
-                    Snackbar.make(findViewById(R.id.mainactivitylayout), "Select user and enter Pin!", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    try {
-                        String q = "select * from teacher where name='" + spinner.getSelectedItem().toString().trim() + "' and pin= '"+loginPin.getText().toString()+"'";
-                        Log.d(TAG, "onClick: query: "+q);
-                        Cursor cursor = database.rawQuery(q, null);
-                        if (cursor.getCount() != 1) {
-                            Snackbar.make(findViewById(R.id.mainactivitylayout), "User not found!", Snackbar.LENGTH_SHORT).show();
-                        } else {
-                            cursor.moveToFirst();
-                            Intent intent = new Intent(MainActivity.this, Dashboard.class);
-                            intent.putExtra("name",cursor.getString(0));
-                            startActivity(intent);
-                            finish();
-                        }
-                        cursor.close();
-                    } catch (Exception e) {
-                        Log.d(TAG, "onClick: Database Exception: "+e.toString());
-                        Snackbar.make(findViewById(R.id.mainactivitylayout), "Database Exception!", Snackbar.LENGTH_SHORT).show();
-                    }
-                }
+                startActivity(new Intent(MainActivity.this, Dashboard.class));
+//                if (spinner.getSelectedItem().toString().isEmpty() || loginPin.getText().toString().length() < 4) {
+//                    Snackbar.make(findViewById(R.id.mainactivitylayout), "Select user and enter Pin!", Snackbar.LENGTH_SHORT).show();
+//                } else {
+//                    try {
+//                        String q = "select * from teacher where name='" + spinner.getSelectedItem().toString().trim() + "' and pin= '"+loginPin.getText().toString()+"'";
+//                        Log.d(TAG, "onClick: query: "+q);
+//                        Cursor cursor = database.rawQuery(q, null);
+//                        if (cursor.getCount() != 1) {
+//                            Snackbar.make(findViewById(R.id.mainactivitylayout), "User not found!", Snackbar.LENGTH_SHORT).show();
+//                        } else {
+//                            cursor.moveToFirst();
+//                            Intent intent = new Intent(MainActivity.this, Dashboard.class);
+//                            intent.putExtra("name",cursor.getString(0));
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                        cursor.close();
+//                    } catch (Exception e) {
+//                        Log.d(TAG, "onClick: Database Exception: "+e.toString());
+//                        Snackbar.make(findViewById(R.id.mainactivitylayout), "Database Exception!", Snackbar.LENGTH_SHORT).show();
+//                    }
+//                }
             }
         });
 

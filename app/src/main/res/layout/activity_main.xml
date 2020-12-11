@@ -5,7 +5,6 @@
     android:id="@+id/mainactivitylayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="#FFFFFF"
     tools:context=".MainActivity">
 
 
@@ -18,46 +17,58 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
-    <EditText
-        android:id="@+id/activity_main_pin"
-        android:layout_width="150sp"
-        android:layout_height="50sp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="#196200EE"
-        android:gravity="center"
-        android:inputType="numberPassword"
-        android:maxLength="4"
-        android:textAlignment="center"
-        android:textSize="24sp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.71000004" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.25">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="150sp"
+                android:layout_height="50sp"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/activity_main_pin"
+                android:layout_width="150sp"
+                android:layout_height="50sp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:gravity="center"
+                android:hint="Pin"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/activity_main_pin"
+        android:contentDescription="@string/user_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.76"
+        app:layout_constraintVertical_bias="0.24000001"
         app:srcCompat="@drawable/userlogo"
-        app:tint="@color/colorPrimary"
-        android:contentDescription="@string/user_icon" />
+        app:tint="@color/colorPrimary" />
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="150sp"
-        android:layout_height="50sp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/activity_main_pin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
