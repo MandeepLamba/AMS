@@ -2,6 +2,6 @@
 Attendance Management System
 
 Langauge: Java
-Database: SQLite
+Database: Firebase Realtime Database
 
-It is an Offline application to help managing attendence.
+It is an Android application to help in managing attendence.
