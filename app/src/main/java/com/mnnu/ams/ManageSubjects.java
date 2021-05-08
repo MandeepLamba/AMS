@@ -1,43 +1,37 @@
 package com.mnnu.ams;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mnnu.ams.Adapters.StudentListAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.mnnu.ams.Adapters.SubjectListAdapter;
+import com.mnnu.ams.HelperClasses.MyFirebaseManager;
 import com.mnnu.ams.HelperClasses.ViewCreator;
-import com.mnnu.ams.Module.Student;
 import com.mnnu.ams.Module.Subject;
 
 import java.util.ArrayList;
-import java.util.concurrent.BlockingDeque;
 
 public class ManageSubjects extends AppCompatActivity {
 
     private static final String TAG = "mandeep";
 
     private FloatingActionButton addSubjectButton;
-    private SQLiteDatabase database;
+    private String myEmail;
     private ListView listView;
     private ArrayList<Subject> subjects;
     private ArrayList<String> classes;
-
 
 
     @Override
@@ -45,83 +39,83 @@ public class ManageSubjects extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_subjects);
-
         getSupportActionBar().setTitle("Subjects");
 
-        database = openOrCreateDatabase("ams", Context.MODE_PRIVATE, null);
-        database.setForeignKeyConstraintsEnabled(true);
 
+        SharedPreferences preferences = getSharedPreferences("username", MODE_PRIVATE);
+        myEmail = preferences.getString("username", "");
 
         listView = findViewById(R.id.subjectListView);
         addSubjectButton = findViewById(R.id.addSubjectFloatingButton);
 
-        addSubjectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ViewCreator creator = new ViewCreator();
-                final ViewGroup viewGroup = creator.newSubjectPromptView(ManageSubjects.this, classes);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(ManageSubjects.this);
-                builder.setView(viewGroup);
-                builder.setTitle("Create Subject");
-                builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String sName =((EditText)viewGroup.getChildAt(0)).getText().toString();
-                        String sClassName =((Spinner)viewGroup.getChildAt(1)).getSelectedItem().toString();
-                        if(!sName.equals("")&&!sClassName.equals("")){
-                            createSubject(sName,sClassName);
-                        }
-                        else {
+        addSubjectButton.setOnClickListener(view -> {
+            ViewCreator creator = new ViewCreator();
+            final ViewGroup viewGroup = creator.newSubjectPromptView(ManageSubjects.this, classes);
+            new AlertDialog.Builder(ManageSubjects.this)
+                    .setView(viewGroup)
+                    .setTitle("Create Subject")
+                    .setPositiveButton("Create", (dialogInterface, i) -> {
+                        String sName = ((EditText) viewGroup.getChildAt(0)).getText().toString();
+                        String sCode = ((EditText) viewGroup.getChildAt(1)).getText().toString();
+                        String sClassName = ((Spinner) viewGroup.getChildAt(2)).getSelectedItem().toString();
+                        if (!sName.equals("") && !sClassName.equals("")) {
+                            createSubject(sName, sClassName, sCode);
+                        } else {
                             Toast.makeText(ManageSubjects.this, "Empty Name!", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(ManageSubjects.this, "Cancelled", Toast.LENGTH_SHORT).show();
-                    }
-                }).show();
-            }
+                    })
+                    .setNegativeButton("Cancel", (dialogInterface, i) -> Toast.makeText(ManageSubjects.this, "Cancelled", Toast.LENGTH_SHORT).show()).show();
         });
         UpdateSubjectList();
         UpdateClassesList();
 
     }
 
-    private void createSubject(String sName, String sClassName) {
-        ContentValues values = new ContentValues();
-        values.put("name",sName);
-        values.put("class",sClassName);
-        if(database.insert("subject",null,values)!=-1){
-            Log.d(TAG, "createSubject: Subject Created");
-            UpdateSubjectList();
-        }
-        else{
-            Toast.makeText(this, "Creating Class failed!", Toast.LENGTH_SHORT).show();
-        }
+    private void createSubject(String sName, String sClassName, String sCode) {
+        MyFirebaseManager.getInstance().addSubject(myEmail, new Subject(sName, sClassName, sCode), aVoid -> UpdateSubjectList());
     }
 
     private void UpdateSubjectList() {
         subjects = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM subject",null);
-        while (cursor.moveToNext()){
-            subjects.add(new Subject(cursor.getString(0),cursor.getString(1)));
-        }
-        if(subjects.size()<1){
-            Toast.makeText(this, "List is Empty, Add Subject", Toast.LENGTH_SHORT).show();
-        }
-        cursor.close();
-        SubjectListAdapter listAdapter = new SubjectListAdapter(this,subjects);
+        MyFirebaseManager.getInstance().getSubjects(myEmail, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot s : dataSnapshot.getChildren()) {
+                        subjects.add(s.getValue(Subject.class));
+                    }
+                    SubjectListAdapter listAdapter = new SubjectListAdapter(ManageSubjects.this, subjects);
+                    listView.setAdapter(listAdapter);
+                } else {
+                    Toast.makeText(ManageSubjects.this, "Add Subjects", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-        listView.setAdapter(listAdapter);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void UpdateClassesList() {
-        classes = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM class",null);
-        while (cursor.moveToNext()){
-            classes.add(cursor.getString(0));
-        }
-        cursor.close();
+        MyFirebaseManager.getInstance().getClasses(myEmail, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    classes = new ArrayList<>();
+                    for (DataSnapshot cl : dataSnapshot.getChildren()) {
+                        classes.add(cl.getValue().toString());
+                    }
+                } else {
+                    Toast.makeText(ManageSubjects.this, "Add Classes First", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

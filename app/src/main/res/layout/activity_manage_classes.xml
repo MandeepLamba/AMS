@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ManageClasses">
 
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/classesListView"
+        app:layout_constraintTop_toTopOf="@+id/classesListView" />
+
     <ListView
         android:id="@+id/classesListView"
         android:layout_width="match_parent"
@@ -29,4 +39,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_add_24" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

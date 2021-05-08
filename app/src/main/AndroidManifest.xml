@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ViewAttendance"/>
         <activity android:name=".ManageSubjects" />
-        <activity android:name=".Attendance" />
+        <activity android:name=".AttendanceActivity" />
         <activity android:name=".ManageClasses" />
         <activity android:name=".ManageStudent" />
         <activity android:name=".Dashboard" />

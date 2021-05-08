@@ -1,33 +1,24 @@
 package com.mnnu.ams.Module;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Attendance {
-    private String name , roll, classname,subjectname,isPrasent;
 
-    public String getName() {
-        return name;
+    private HashMap<String,Object> list;
+
+    public HashMap<String, Object> getList() {
+        return list;
     }
 
-    public String getRoll() {
-        return roll;
+    public void setList(HashMap<String, Object> list) {
+        this.list = list;
     }
 
-    public String getClassname() {
-        return classname;
+    public Attendance(HashMap<String, Object> list) {
+        this.list = list;
     }
 
-    public String getSubjectname() {
-        return subjectname;
-    }
-
-    public String getIsPrasent() {
-        return isPrasent;
-    }
-
-    public Attendance(String name, String roll, String classname, String subjectname, String isPrasent) {
-        this.name = name;
-        this.roll = roll;
-        this.classname = classname;
-        this.subjectname = subjectname;
-        this.isPrasent = isPrasent;
+    public Attendance() {
     }
 }

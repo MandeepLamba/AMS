@@ -7,30 +7,28 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.mnnu.ams.Module.Attendance;
-import com.mnnu.ams.Module.Student;
 import com.mnnu.ams.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.Collections;
+import java.util.Date;
+import java.util.TreeMap;
 
 public class AttendanceListAdapter extends BaseAdapter {
 
     private static final String TAG = "mandeep";
 
     private Activity activity;
-    private HashMap<String,Float> fAttend;
-    private ArrayList<String> keys;
+    private TreeMap<Long, Float> fAttend;
+    private ArrayList<Long> keys;
 
-    public AttendanceListAdapter(Activity activity, HashMap<String,Float> fAttend) {
+    public AttendanceListAdapter(Activity activity) {
         this.activity = activity;
-        this.fAttend = fAttend;
+        this.fAttend = new TreeMap<>();
         keys = new ArrayList<>();
-        keys.addAll(fAttend.keySet());
         Log.d(TAG, "AttendanceListAdapter: started");
-        
+
     }
 
     @Override
@@ -50,30 +48,33 @@ public class AttendanceListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view == null){
-            view = activity.getLayoutInflater().inflate(R.layout.attendance_list_item,null);
+        if (view == null) {
+            view = activity.getLayoutInflater().inflate(R.layout.attendance_list_item, null);
         }
         Float aFloat = fAttend.get(getItem(i));
-        if(aFloat>=90){
+        if (aFloat >= 90) {
             view.setBackgroundResource(R.color.great);
-        }
-        else if(aFloat>=75){
+        } else if (aFloat >= 75) {
             view.setBackgroundResource(R.color.safe);
-        }
-        else{
+        } else {
             view.setBackgroundResource(R.color.danger);
         }
 
         TextView sName = view.findViewById(R.id.attendanceList_name);
         TextView sAttendance = view.findViewById(R.id.attendanceList_attendance);
 
-        Log.d(TAG, "getView: key:"+getItem(i).toString() + "value: "+aFloat.toString());
-        sName.setText(getItem(i).toString());
-        Double r = Math.round(aFloat*100)/100.0;
+        sName.setText(new SimpleDateFormat("dd MMM").format(new Date(Long.valueOf((Long) getItem(i)))));
+//        sName.setText(fAttend.get((Long)getItem(i)));
+        Double r = Math.round(aFloat * 100) / 100.0;
         sAttendance.setText(r.toString());
 
         return view;
     }
 
-
+    public void setData(TreeMap<Long, Float> attendances) {
+        fAttend = attendances;
+        keys.addAll(fAttend.keySet());
+        Collections.sort(keys);
+        notifyDataSetChanged();
+    }
 }

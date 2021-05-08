@@ -2,28 +2,31 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="10dp"
-        android:weightSum="2"
-        android:layout_height="wrap_content">
+        android:weightSum="2">
+
         <TextView
             android:id="@+id/attendanceList_name"
             android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:textSize="22sp"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="22sp" />
+
         <TextView
             android:id="@+id/attendanceList_attendance"
             android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:textSize="22sp"
-            android:gravity="end"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="TextView"
+            android:textSize="22sp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

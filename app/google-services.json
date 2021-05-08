@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "219440035071",
+    "firebase_url": "https://attandance-dc66b-default-rtdb.firebaseio.com",
+    "project_id": "attandance-dc66b",
+    "storage_bucket": "attandance-dc66b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219440035071:android:ba2ba5b60da87abfc648ca",
+        "android_client_info": {
+          "package_name": "com.mnnu.ams"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219440035071-335r3e5rje55c3p2dp0po10uo6nes2dn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7K2pbpjdQI0I8w7JNLM4RNJKr09qn5gA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219440035071-335r3e5rje55c3p2dp0po10uo6nes2dn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
