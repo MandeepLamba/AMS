@@ -1,35 +1,44 @@
 package com.mnnu.ams.Adapters;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.mnnu.ams.Module.Attendance;
-import com.mnnu.ams.Module.Student;
 import com.mnnu.ams.R;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.TreeMap;
 
 public class AttendanceListAdapter extends BaseAdapter {
 
-    private Activity activity;
-    private List<Attendance> attendances;
+    private static final String TAG = "mandeep";
 
-//    public AttendanceListAdapter(Activity activity, ) {
-//        this.activity = activity;
-//        this.attendances = attendances;
-//    }
+    private Activity activity;
+    private TreeMap<Long, Float> fAttend;
+    private ArrayList<Long> keys;
+
+    public AttendanceListAdapter(Activity activity) {
+        this.activity = activity;
+        this.fAttend = new TreeMap<>();
+        keys = new ArrayList<>();
+        Log.d(TAG, "AttendanceListAdapter: started");
+
+    }
 
     @Override
     public int getCount() {
-        return attendances.size();
+        return fAttend.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return attendances.get(i);
+        return keys.get(i);
     }
 
     @Override
@@ -39,17 +48,33 @@ public class AttendanceListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view == null){
-            view = activity.getLayoutInflater().inflate(R.layout.student_list_item,null);
+        if (view == null) {
+            view = activity.getLayoutInflater().inflate(R.layout.attendance_list_item, null);
         }
-        TextView sName = (TextView)view.findViewById(R.id.attendanceList_name);
-        TextView sAttendance = (TextView)view.findViewById(R.id.attendanceList_attendance);
+        Float aFloat = fAttend.get(getItem(i));
+        if (aFloat >= 90) {
+            view.setBackgroundResource(R.color.great);
+        } else if (aFloat >= 75) {
+            view.setBackgroundResource(R.color.safe);
+        } else {
+            view.setBackgroundResource(R.color.danger);
+        }
 
-        Attendance attendance = attendances.get(i);
-//
-//        sName.setText(attendance);
-//        sAttendance.setText(s.getsRoll());
+        TextView sName = view.findViewById(R.id.attendanceList_name);
+        TextView sAttendance = view.findViewById(R.id.attendanceList_attendance);
+
+        sName.setText(new SimpleDateFormat("dd MMM").format(new Date(Long.valueOf((Long) getItem(i)))));
+//        sName.setText(fAttend.get((Long)getItem(i)));
+        Double r = Math.round(aFloat * 100) / 100.0;
+        sAttendance.setText(r.toString());
 
         return view;
+    }
+
+    public void setData(TreeMap<Long, Float> attendances) {
+        fAttend = attendances;
+        keys.addAll(fAttend.keySet());
+        Collections.sort(keys);
+        notifyDataSetChanged();
     }
 }

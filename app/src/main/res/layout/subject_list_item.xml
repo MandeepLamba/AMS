@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp"
-    android:weightSum="2"
-    android:orientation="horizontal">
+    app:cardCornerRadius="20dp">
 
-    <TextView
-        android:id="@+id/subjectList_name"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:textSize="22sp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
-    <TextView
-        android:id="@+id/subjectList_classname"
-        android:layout_width="wrap_content"
-        android:gravity="end"
-        android:layout_weight="1"
-        android:textSize="22sp"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:weightSum="3">
 
+        <TextView
+            android:id="@+id/subjectList_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="22sp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/subjectList_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/subjectList_classname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="TextView"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

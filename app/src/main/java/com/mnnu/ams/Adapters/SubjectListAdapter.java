@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.mnnu.ams.Module.Student;
 import com.mnnu.ams.Module.Subject;
 import com.mnnu.ams.R;
 
@@ -39,16 +38,18 @@ public class SubjectListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view == null){
-            view = activity.getLayoutInflater().inflate(R.layout.subject_list_item,null);
+        if (view == null) {
+            view = activity.getLayoutInflater().inflate(R.layout.subject_list_item, null);
         }
-        TextView sName = (TextView)view.findViewById(R.id.subjectList_name);
-        TextView sClass = (TextView)view.findViewById(R.id.subjectList_classname);
+        TextView sName = view.findViewById(R.id.subjectList_name);
+        TextView sClass = view.findViewById(R.id.subjectList_classname);
+        TextView sCode = view.findViewById(R.id.subjectList_code);
 
         Subject s = subjects.get(i);
 
         sName.setText(s.getName());
         sClass.setText(s.getClassname());
+        sCode.setText(s.getSubjectcode());
 
         return view;
     }
